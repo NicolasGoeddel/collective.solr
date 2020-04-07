@@ -1,10 +1,68 @@
 Changelog
 =========
 
-8.0.0a5 (unreleased)
---------------------
+8.0.0a13 (unreleased)
+---------------------
 
 - Nothing changed yet.
+
+
+8.0.0a12 (2020-03-30)
+---------------------
+
+- Fix millisecond management in datetime indexes
+  [odelaere]
+
+
+8.0.0a11 (2020-03-27)
+---------------------
+
+- Fix `getObjPositionInParent` index by avoiding indexing null values
+  [mpeeters]
+
+
+8.0.0a10 (2020-03-25)
+---------------------
+
+- Fix queries with `integer` or `float` values
+  [mpeeters]
+
+
+8.0.0a9 (2020-03-24)
+--------------------
+
+- Correctly handle queries with python `date` or `datetime` objects
+  [mpeeters]
+
+- Correctly implement `actual_result_count` property setter
+  [mpeeters]
+
+
+8.0.0a8 (2020-03-24)
+--------------------
+
+- Add support for "not" queries.
+  [mpeeters]
+
+
+8.0.0a7 (2020-03-06)
+--------------------
+
+- Fix BinaryAdder for Tika. Newer Solr versions expect json so we have to set wt=xml in the BinaryAdder.
+  [timo]
+
+
+8.0.0a6 (2020-02-28)
+--------------------
+
+- Fix index subjects with non-ascii characters. [mathias.leimgruber]
+
+
+8.0.0a5 (2019-12-17)
+--------------------
+
+- Use named behavior "solr.fields" instead of "collective.solr.behaviors.ISolrFields".
+  [timo]
 
 
 8.0.0a4 (2019-11-28)
