@@ -161,6 +161,8 @@ class SolrField(AttrDict):
     def __init__(self, *args, **kw):
         self["required"] = False
         self["multiValued"] = False
+        self["indexed"] = True
+        self["stored"] = True
         super(SolrField, self).__init__(*args, **kw)
 
 

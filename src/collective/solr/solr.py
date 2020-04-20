@@ -329,7 +329,8 @@ class SolrConnection:
         return response
 
     def getSchema(self):
-        schema_url = "%s/admin/file/?file=schema.xml"
+        # schema_url = "%s/admin/file/?file=schema.xml"
+        schema_url = "%s/schema?wt=schema.xml"
         # schema_url = '%s/admin/file/?file=managed-schema'
         logger.debug("getting schema from: %s", schema_url % self.solrBase)
         try:

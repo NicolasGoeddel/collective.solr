@@ -102,6 +102,7 @@ def inthandler(value):
 
 handlers = {
     "solr.DateField": datehandler,
+    "solr.DatePointField": datehandler,
     "solr.FloatField": inthandler,
     "solr.TrieDateField": datehandler,
     "solr.TrieIntField": inthandler,
@@ -395,4 +396,5 @@ class SolrIndexProcessor(object):
                 value = value.decode("utf-8")
             data[name] = value
         missing = set(schema.requiredFields) - set(data.keys())
+
         return data, missing
