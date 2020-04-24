@@ -1,7 +1,7 @@
 from setuptools import setup
 from setuptools import find_packages
 
-version = "8.0.0a13.dev2"
+version = "8.0.0a13.dev3"
 
 long_description = "\n\n".join(
     [open("README.rst").read(), open("CHANGES.rst").read()])
@@ -66,6 +66,7 @@ setup(
         "zope.interface",
         "zope.publisher",
         "zope.schema",
+        "requests_toolbelt"
     ],
     extras_require={
         "test": ["plone.app.testing[robot]", "plone.app.robotframework[debug]"],

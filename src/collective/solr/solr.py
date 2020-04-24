@@ -41,6 +41,8 @@ from collective.solr.parser import SolrSchema
 from collective.solr.utils import getConfig
 from collective.solr.utils import translation_map
 
+from requests_toolbelt import MultipartEncoder
+
 from logging import getLogger
 import six
 
@@ -122,7 +124,7 @@ class SolrConnection:
         return self.doGetOrPost("GET", url, "", headers)
 
     def doGetOrPost(self, method, url, body, headers):
-        if not isinstance(body, six.binary_type):
+        if not isinstance(body, (six.binary_type, MultipartEncoder)):
             body = body.encode("utf-8")
         try:
             self.conn.request(method, url, body, headers)

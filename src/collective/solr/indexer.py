@@ -37,6 +37,7 @@ from collective.solr.utils import getConfig
 from socket import error
 from six.moves.urllib.parse import urlencode
 
+from requests_toolbelt import MultipartEncoder
 
 logger = getLogger("collective.solr.indexer")
 
@@ -140,7 +141,7 @@ class BinaryAdder(DefaultAdder):
         try:
             path = blob.committed()
         except BlobError:
-            path = blob._p_blob_committed or blob._p_blob_uncommitted
+            path = blob._p_blob_committed or blob._p_blob_uncommitted 
         logger.debug("Indexing BLOB from path %s", path)
         return path
 
@@ -149,27 +150,40 @@ class BinaryAdder(DefaultAdder):
         path = self.getpath()
         if path is None:
             super(BinaryAdder, self).__call__(conn, **data)
-        postdata["stream.file"] = self.getpath()
-        postdata["stream.contentType"] = data.get(
-            "content_type", "application/octet-stream"
-        )
-        postdata["extractFormat"] = "text"
-        postdata["extractOnly"] = "true"
-        postdata["wt"] = "xml"
+        
+        if not self.getblob() is None :
+            
+            openedBlob = self.getblob().open()
 
-        url = "%s/update/extract" % conn.solrBase
-        try:
-            response = conn.doPost(
-                url, urlencode(postdata, doseq=True), conn.formheaders
-            )
-            root = etree.parse(response)
-            data["SearchableText"] = root.find(".//str").text.strip()
-        except SolrConnectionException as e:
-            logger.warning("Error %s @ %s", e, data["path_string"])
-            data["SearchableText"] = ""
-        except etree.XMLSyntaxError as e:
-            logger.warning("Parsing error %s @ %s.", e, data["path_string"])
-            data["SearchableText"] = ""
+            postdata["extractFormat"] = "text"
+            postdata["extractOnly"] = "true"
+            postdata["wt"] = "xml"
+            postdata['myfile'] = (data['id'], openedBlob, data.get("content_type", "application/octet-stream"))
+            
+            encodedPost = MultipartEncoder(fields = postdata)
+            
+            headers = conn.formheaders
+            headers['Content-Type'] = encodedPost.content_type
+            
+            url = "%s/update/extract" % conn.solrBase
+            
+            try:
+                response = conn.doPost(
+                    url, encodedPost.to_string(), headers
+                )
+                root = etree.parse(response)
+                data["SearchableText"] = root.find(".//str").text.strip()
+            except SolrConnectionException as e:
+                logger.warn("Error %s @ %s", e, data["path_string"])
+                data["SearchableText"] = ""
+            except etree.XMLSyntaxError as e:
+                logger.warn("Parsing error %s @ %s.", e, data["path_string"])
+                data["SearchableText"] = ""
+            finally :
+                openedBlob.close()
+        else :
+            logger.warn("Ignoring blob that is None @ %s", data["path_string"])
+        
         super(BinaryAdder, self).__call__(conn, **data)
 
 
