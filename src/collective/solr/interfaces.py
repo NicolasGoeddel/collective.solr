@@ -157,6 +157,21 @@ class ISolrSchema(Interface):
         required=False,
     )
 
+    allowed_mimetypes = List(
+        title=_("label_allowed_mimetypes", default=u"Allowed MIME types for binary data."),
+        description=_(
+            "help_allowed_mimetypes",
+            default=u"Specify mime types of binary data like File and Image objects "
+            u"which should be send to Solr for extracing its content and add it to"
+            u"the SearchableText index automatically, one per line."
+            u"Typical examples are "
+            u'"application/pdf" or "application/msword"'
+        ),
+        value_type=TextLine(),
+        default=[],
+        required=False,
+    )
+
     filter_queries = List(
         title=_("label_filter_queries", default=u"Filter query parameters"),
         description=_(

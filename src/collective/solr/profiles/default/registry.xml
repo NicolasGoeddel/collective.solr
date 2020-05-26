@@ -2,28 +2,30 @@
 <registry>
   <records interface="collective.solr.interfaces.ISolrSchema"
            prefix="collective.solr">
-    <value key="active">False</value>
-    <value key="host">127.0.0.1</value>
-    <value key="port">8983</value>
-    <value key="base">/solr/plone</value>
-    <value key="index_timeout">0.0</value>
-    <value key="search_timeout">0.0</value>
-    <value key="max_results">10000000</value>
-    <value key="exclude_user">False
+    <value key="active" purge="false">False</value>
+    <value key="host" purge="false">127.0.0.1</value>
+    <value key="port" purge="false">8983</value>
+    <value key="base" purge="false">/solr/plone</value>
+    <value key="index_timeout" purge="false">0.0</value>
+    <value key="search_timeout" purge="false">0.0</value>
+    <value key="max_results" purge="false">10000000</value>
+    <value key="exclude_user" purge="false">False
     </value>
-    <value key="search_pattern">+(Title:{value}^5 OR Description:{value}^2 OR SearchableText:{value} OR SearchableText:({base_value}) OR searchwords:({base_value})^1000) -showinsearch:False
+    <value key="search_pattern" purge="false">+(Title:{value}^5 OR Description:{value}^2 OR SearchableText:{value} OR SearchableText:({base_value}) OR searchwords:({base_value})^1000) -showinsearch:False
     </value>
-    <value key="required">
+    <value key="required" purge="false">
       <element>SearchableText</element>
     </value>
-    <value key="facets">
+    <value key="facets" purge="false">
       <element>portal_type</element>
       <element>review_state</element>
     </value>
-    <value key="filter_queries">
+    <value key="filter_queries" purge="false">
       <element>portal_type</element>
     </value>
-    <value key="boost_script"></value>
+    <value key="allowed_mimetypes" purge="false">
+    </value>
+    <value key="boost_script" purge="false"></value>
   </records>
 
 </registry>

@@ -130,9 +130,20 @@ class BinaryAdder(DefaultAdder):
     """ Add binary content to index via tika
     """
 
+    def getField(self) :
+        if hasattr(self, 'fieldname') :
+            return getattr(self.context, self.fieldname, None)
+        
+
+
     def getblob(self):
-        field = self.context.getPrimaryField()
-        return field.get(self.context).blob
+        field = self.getField()
+        if field is not None :
+            return getattr(field, "_blob", None)
+        
+    def getContentType(self, default = None) :
+        field = self.getField()
+        return getattr(field, 'contentType', default)
 
     def getpath(self):
         blob = self.getblob()
@@ -151,14 +162,22 @@ class BinaryAdder(DefaultAdder):
         if path is None:
             super(BinaryAdder, self).__call__(conn, **data)
         
-        if not self.getblob() is None :
+        mimetype = self.getContentType(data.get("content_type", "application/octet-stream"))
+
+        registry = getUtility(IRegistry)
+        allowed_mimetypes = registry["collective.solr.allowed_mimetypes"]
+
+        if (allowed_mimetypes is not None) and (not mimetype in allowed_mimetypes) :
+            logger.debug("Ignoring blob that has mimetype %s @ %s", mimetype, data["path_string"])
+
+        elif not self.getblob() is None :
             
             openedBlob = self.getblob().open()
 
             postdata["extractFormat"] = "text"
             postdata["extractOnly"] = "true"
             postdata["wt"] = "xml"
-            postdata['myfile'] = (data['id'], openedBlob, data.get("content_type", "application/octet-stream"))
+            postdata['myfile'] = (data['id'], openedBlob, mimetype)
             
             encodedPost = MultipartEncoder(fields = postdata)
             
